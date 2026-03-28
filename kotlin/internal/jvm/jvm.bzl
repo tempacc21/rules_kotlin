@@ -338,7 +338,8 @@ these deps. This is not true for regular (non-exported) deps.""",
 _runnable_common_attr = utils.add_dicts(_common_attr, _runnable_implicit_deps, {
     "env": attr.string_dict(
         doc = """Environment variables to set when this binary is executed with `bazel run`.
-Note: for Starlark rules, values are used as-is (no automatic $(location) / make variable expansion).""",
+Supports `$(location)`, `$(locations)`, and make variable expansion; targets used in location
+expansion must also appear in `data`.""",
         default = {},
     ),
     "env_inherit": attr.string_list(

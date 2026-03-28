@@ -377,7 +377,10 @@ def kt_jvm_binary_impl(ctx):
         ),
         launcher_result.executable,
         RunEnvironmentInfo(
-            environment = ctx.attr.env,
+            environment = {
+                k: ctx.expand_location(ctx.expand_make_variables("env", v, {}), ctx.attr.data)
+                for k, v in ctx.attr.env.items()
+            },
             inherited_environment = ctx.attr.env_inherit,
         ),
     )
@@ -442,7 +445,13 @@ def kt_jvm_junit_test_impl(ctx):
         ),
         launcher_result.executable,
         # adds common test variables, including TEST_WORKSPACE.
-        testing.TestEnvironment(environment = ctx.attr.env, inherited_environment = ctx.attr.env_inherit),
+        testing.TestEnvironment(
+            environment = {
+                k: ctx.expand_location(ctx.expand_make_variables("env", v, {}), ctx.attr.data)
+                for k, v in ctx.attr.env.items()
+            },
+            inherited_environment = ctx.attr.env_inherit,
+        ),
     )
 
 _KtCompilerPluginClasspathInfo = provider(
